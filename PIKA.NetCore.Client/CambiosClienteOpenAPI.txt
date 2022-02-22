@@ -1,0 +1,30 @@
+﻿En todas las API que involucren query cambiar a
+    if (query != null)
+            {
+                string q = query == null ? "" : query.QueryString();
+                if (!string.IsNullOrEmpty(q)) urlBuilder_.Append($"{q}");
+                //urlBuilder_.Append(System.Uri.EscapeDataString("query") + "=").Append(System.Uri.EscapeDataString(ConvertToString(query, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+
+En el UPload de contenido cambiar a
+
+ if (indice != null)
+                    //    throw new System.ArgumentNullException("indice");
+                    //else
+                    {
+                        content_.Add(new System.Net.Http.StringContent(ConvertToString(indice, System.Globalization.CultureInfo.InvariantCulture)), "Indice");
+                    }
+
+                    if (posicion != null)
+                    //    throw new System.ArgumentNullException("posicion");
+                    //else
+                    {
+                        content_.Add(new System.Net.Http.StringContent(ConvertToString(posicion, System.Globalization.CultureInfo.InvariantCulture)), "Posicion");
+                    }
+
+                    if (posicionInicio != null)
+                    //    throw new System.ArgumentNullException("posicionInicio");
+                    //else
+                    {
+                        content_.Add(new System.Net.Http.StringContent(ConvertToString(posicionInicio, System.Globalization.CultureInfo.InvariantCulture)), "PosicionInicio");
+                    }

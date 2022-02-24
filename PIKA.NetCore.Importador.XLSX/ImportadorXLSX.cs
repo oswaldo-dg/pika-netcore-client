@@ -186,71 +186,73 @@ namespace PIKA.NetCore.Importador.XLSX
                                             {
                                                 VersionElemento = versionResult.Payload;
 
-                                                if(VersionElemento!=null)
+                                                //if(VersionElemento!=null)
+                                                //{
+                                                //    if(VersionElemento.Partes != null)
+                                                //    {
+                                                //       foreach(var p in  VersionElemento.Partes.ToList())
+                                                //        {
+                                                //            string[] partes = (p.NombreOriginal ?? "").Split('.');
+                                                //            if (partes.Length == 2)
+                                                //            {
+                                                //                int index;
+                                                //                if (int.TryParse(partes[0], out index))
+                                                //                {
+                                                //                    p.Indice = index;
+                                                //                    modificado = true;
+                                                //                }
+                                                //            }
+                                                //        }
+                                                //    }
+
+                                                //    if(modificado)
+                                                //    {
+                                                //        await ContentClient.UpdateVersion(VersionElemento.Id, VersionElemento);
+                                                //        ws.Row(i).Cell(Constants.COL_ESTADO_METADATOS).SetValue<string>("OK+VERSION");
+                                                //    } 
+                                                //}
+
+
+
+                                                if (VersionElemento.Partes == null) VersionElemento.Partes = new List<Parte>();
+                                                List<string> archivos = new List<string>();
+                                                List<string> archivosNuevos = new List<string>();
+                                                if (act.EsFolder)
                                                 {
-                                                    if(VersionElemento.Partes != null)
+                                                    if (System.IO.Directory.Exists(act.Ruta))
                                                     {
-                                                       foreach(var p in  VersionElemento.Partes.ToList())
-                                                        {
-                                                            string[] partes = (p.NombreOriginal ?? "").Split('.');
-                                                            if (partes.Length == 2)
-                                                            {
-                                                                int index;
-                                                                if (int.TryParse(partes[0], out index))
-                                                                {
-                                                                    p.Indice = index;
-                                                                    modificado = true;
-                                                                }
-                                                            }
-                                                        }
+                                                        archivos = System.IO.Directory.GetFiles(act.Ruta).ToList().OrderBy(f=>f).ToList();
                                                     }
 
-                                                    if(modificado)
-                                                    {
-                                                        await ContentClient.UpdateVersion(VersionElemento.Id, VersionElemento);
-                                                        ws.Row(i).Cell(Constants.COL_ESTADO_METADATOS).SetValue<string>("OK+VERSION");
-                                                    } 
                                                 }
-                                                
-                                                
+                                                else
+                                                {
+                                                    if (System.IO.File.Exists(act.Ruta))
+                                                    {
+                                                        archivos.Add(act.Ruta);
+                                                    }
+                                                }
 
-                                                //if (VersionElemento.Partes == null) VersionElemento.Partes = new List<Parte>();
-                                                //List<string> archivos = new List<string>();
-                                                //List<string> archivosNuevos = new List<string>();
-                                                //if (act.EsFolder)
-                                                //{
-                                                //    if (System.IO.Directory.Exists(act.Ruta))
-                                                //    {
-                                                //        archivos = System.IO.Directory.GetFiles(act.Ruta).ToList();
-                                                //    }
+                                                // Añade sólo los archivos inextsiontes como partes
+                                                archivos.ForEach(a =>
+                                                {
+                                                    FileInfo fi = new FileInfo(a);
+                                                    // Log.Error($"{fi.Name} {fi.Length}");
+                                                    if (!VersionElemento.Partes.Any(x => x.NombreOriginal == fi.Name))
+                                                    {
+                                                        archivosNuevos.Add(a);
+                                                    }
+                                                });
 
-                                                //} else
-                                                //{
-                                                //    if (System.IO.File.Exists(act.Ruta))
-                                                //    {
-                                                //        archivos.Add(act.Ruta);
-                                                //    }
-                                                //}
-
-                                                //// Añade sólo los archivos inextsiontes como partes
-                                                //archivos.ForEach(a => {
-                                                //    FileInfo fi = new FileInfo(a);
-                                                //    // Log.Error($"{fi.Name} {fi.Length}");
-                                                //    if(!VersionElemento.Partes.Any(x=>x.NombreOriginal ==  fi.Name))
-                                                //    {
-                                                //        archivosNuevos.Add(a);
-                                                //    }
-                                                //});
-
-                                                //if(archivosNuevos.Count>0)
-                                                //{
-                                                //    string sesion = Guid.NewGuid().ToString();
-                                                //    foreach (string archivo in archivosNuevos)
-                                                //    {
-                                                //        await ContentClient.UploadContent(archivo, sesion, ElementoActivo.VolumenId, ElementoActivo.Id, ElementoActivo.PuntoMontajeId, ElementoActivo.Id);
-                                                //    }
-                                                //    await ContentClient.CompleteUploadContent(sesion);
-                                                //}
+                                                if (archivosNuevos.Count > 0)
+                                                {
+                                                    string sesion = Guid.NewGuid().ToString();
+                                                    foreach (string archivo in archivosNuevos)
+                                                    {
+                                                        await ContentClient.UploadContent(archivo, sesion, ElementoActivo.VolumenId, ElementoActivo.Id, ElementoActivo.PuntoMontajeId, ElementoActivo.Id);
+                                                    }
+                                                    await ContentClient.CompleteUploadContent(sesion);
+                                                }
 
                                             } // Version obtenida OK
 

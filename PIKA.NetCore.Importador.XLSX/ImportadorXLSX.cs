@@ -284,6 +284,7 @@ namespace PIKA.NetCore.Importador.XLSX
                         ws.Row(i).Cell(Constants.COL_ERROR).SetValue<string>($"Datos no validos renglon {i}");
                         Log.Warning($"Datos no validos renglon {i}");
                     }
+                    workbook.Save();
                     i++;
                     empty = string.IsNullOrEmpty(ws.Row(i).Cell(Constants.COL_NOMBRE).GetString());
                 }

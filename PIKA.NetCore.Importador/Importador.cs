@@ -67,7 +67,7 @@ namespace PIKA.NetCore.Importador
                             });
 
                             importadorPika.DateFormat = "dd/MM/yyyy";
-                            await importadorPika.Importar(@"C:\Users\oswal\Desktop\importar.xlsx", documentalAPI, metadatosAPI, contentAPI);
+                            await importadorPika.Importar(@"C:\desa\importar-ca-test.xlsx", documentalAPI, metadatosAPI, contentAPI);
 
                         } else
                         {

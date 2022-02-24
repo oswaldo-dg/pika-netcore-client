@@ -35,7 +35,7 @@ namespace PIKA.NetCore.Importador.XLSX
                 return null;
             }
 
-            if (DateTime.TryParseExact(Data, DateFormat, null, System.Globalization.DateTimeStyles.None, out DateTime dt))
+            if (DateTime.TryParse(Data, null, System.Globalization.DateTimeStyles.None, out DateTime dt))
             {
                 return dt;
             }

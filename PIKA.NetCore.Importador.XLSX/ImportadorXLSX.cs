@@ -186,33 +186,32 @@ namespace PIKA.NetCore.Importador.XLSX
                                             {
                                                 VersionElemento = versionResult.Payload;
 
-                                                //if(VersionElemento!=null)
-                                                //{
-                                                //    if(VersionElemento.Partes != null)
-                                                //    {
-                                                //       foreach(var p in  VersionElemento.Partes.ToList())
-                                                //        {
-                                                //            string[] partes = (p.NombreOriginal ?? "").Split('.');
-                                                //            if (partes.Length == 2)
-                                                //            {
-                                                //                int index;
-                                                //                if (int.TryParse(partes[0], out index))
-                                                //                {
-                                                //                    p.Indice = index;
-                                                //                    modificado = true;
-                                                //                }
-                                                //            }
-                                                //        }
-                                                //    }
+                                                if (VersionElemento != null)
+                                                {
+                                                    if (VersionElemento.Partes != null && VersionElemento.Partes.ToList().Count > 0)
+                                                    {
+                                                        Log.Information($"Reordenando");
+                                                        foreach (var p in VersionElemento.Partes.ToList())
+                                                        {
+                                                            string[] partes = (p.NombreOriginal ?? "").Split('.');
+                                                            if (partes.Length == 2)
+                                                            {
+                                                                int index;
+                                                                if (int.TryParse(partes[0], out index))
+                                                                {
+                                                                    p.Indice = index;
+                                                                    modificado = true;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
 
-                                                //    if(modificado)
-                                                //    {
-                                                //        await ContentClient.UpdateVersion(VersionElemento.Id, VersionElemento);
-                                                //        ws.Row(i).Cell(Constants.COL_ESTADO_METADATOS).SetValue<string>("OK+VERSION");
-                                                //    } 
-                                                //}
-
-
+                                                    if (modificado)
+                                                    {
+                                                        await ContentClient.UpdateVersion(VersionElemento.Id, VersionElemento);
+                                                        ws.Row(i).Cell(Constants.COL_ESTADO_METADATOS).SetValue<string>("OK+VERSION");
+                                                    }
+                                                }
 
                                                 if (VersionElemento.Partes == null) VersionElemento.Partes = new List<Parte>();
                                                 List<string> archivos = new List<string>();
@@ -247,9 +246,11 @@ namespace PIKA.NetCore.Importador.XLSX
                                                 if (archivosNuevos.Count > 0)
                                                 {
                                                     string sesion = Guid.NewGuid().ToString();
+                                                    int indice = 0;
                                                     foreach (string archivo in archivosNuevos)
                                                     {
-                                                        await ContentClient.UploadContent(archivo, sesion, ElementoActivo.VolumenId, ElementoActivo.Id, ElementoActivo.PuntoMontajeId, ElementoActivo.Id);
+                                                        await ContentClient.UploadContent(archivo, sesion, ElementoActivo.VolumenId, ElementoActivo.Id, ElementoActivo.PuntoMontajeId, ElementoActivo.Id, indice, null, null);
+                                                        indice++;
                                                     }
                                                     await ContentClient.CompleteUploadContent(sesion);
                                                 }

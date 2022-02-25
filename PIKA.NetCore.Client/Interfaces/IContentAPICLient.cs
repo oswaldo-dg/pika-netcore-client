@@ -17,7 +17,7 @@ namespace PIKA.NetCore.Client
         Task<PikaAPIResult<Elemento>> GetElementoById(string Id);
         Task<PikaAPIResult<Carpeta>> CreateCarpetaRuta(CarpetaDeRuta Carpeta);
       
-        Task<PikaAPICommand> UploadContent(string FilePath, string TransaccionId, string VolumenId, string ElementoId, string PuntoMontajeId, string versionId);
+        Task<PikaAPICommand> UploadContent(string FilePath, string TransaccionId, string VolumenId, string ElementoId, string PuntoMontajeId, string versionId, int? indice, PosicionCarga? posicionCarga, int? posicioninicio);
         Task<PikaAPIResult<List<Pagina>>> CompleteUploadContent(string TransaccionId);
     }
 }

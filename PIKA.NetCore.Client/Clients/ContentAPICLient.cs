@@ -288,7 +288,7 @@ namespace PIKA.NetCore.Client
 
     
 
-        public async Task<PikaAPICommand> UploadContent(string FilePath, string TransaccionId, string VolumenId, string ElementoId, string PuntoMontajeId, string versionId)
+        public async Task<PikaAPICommand> UploadContent(string FilePath, string TransaccionId, string VolumenId, string ElementoId, string PuntoMontajeId, string versionId, int? indice, PosicionCarga? posicionCarga, int? posicioninicio )
         {
             PikaAPICommand cmd = new PikaAPICommand();
             if (InSession)
@@ -299,7 +299,7 @@ namespace PIKA.NetCore.Client
                     FileInfo fi = new FileInfo(FilePath);
                     FileStream fs = new FileStream(FilePath, FileMode.Open, FileAccess.Read);
                     FileParameter p = new FileParameter(fs, fi.Name);
-                    var response = await apiClient.ApiVUploadAsync(p, TransaccionId, VolumenId, ElementoId, PuntoMontajeId, versionId, null, null, null, Constants.APIVERSION);
+                    var response = await apiClient.ApiVUploadAsync(p, TransaccionId, VolumenId, ElementoId, PuntoMontajeId, versionId, indice, posicionCarga, posicioninicio, Constants.APIVERSION);
                     if (response.StatusCode == 200)
                     {
                         cmd.Success = true;

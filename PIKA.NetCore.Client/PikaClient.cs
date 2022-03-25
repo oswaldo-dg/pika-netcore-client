@@ -163,6 +163,7 @@ namespace PIKA.NetCore.Client
             }
             else
             {
+                Console.WriteLine($"iniciando sesión en {Config.URLIdentity}");
                 var disco = await HttpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
                 {
                     Address = Config.URLIdentity,

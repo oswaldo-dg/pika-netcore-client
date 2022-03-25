@@ -167,7 +167,12 @@ namespace PIKA.NetCore.Client
                 var disco = await HttpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
                 {
                     Address = Config.URLIdentity,
-                    Policy = { RequireHttps = false, AllowHttpOnLoopback = true,  ValidateIssuerName =false }
+                    Policy = { RequireHttps = false, AllowHttpOnLoopback = true,  ValidateIssuerName =false, ValidateEndpoints = false, 
+                    AdditionalEndpointBaseAddresses =
+                    {
+                        "http://148.244.231.37"
+                    } 
+                    }
                 });
 
                 if (disco.IsError)

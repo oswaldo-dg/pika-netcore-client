@@ -8,6 +8,6 @@ namespace PIKA.NetCore.Importador
 {
     public interface IAplicacion
     {
-        Task Run();
+        Task Run(string ArchivoXLSX, string ArchivOmisiones);
     }
 }

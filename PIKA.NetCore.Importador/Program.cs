@@ -21,6 +21,8 @@ namespace PIKA.NetCore.Importador
                 return;
             }
 
+
+            Console.WriteLine($"Procesando: {args[0]}, {args[1]} ");
             var host = AppStartup();
             var service = ActivatorUtilities.CreateInstance<Importador>(host.Services);
             service.Run(args[0], args[1]).Wait();

@@ -37,7 +37,13 @@ namespace PIKA.NetCore.Importador
             ((IPikaSession)this.contentAPI).SetConfig(_apiConfig);
         }
 
-        public async Task Run()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ArchivoXLSX">Archico de carga</param>
+        /// <param name="ArchivoOmisiones">Archivo de texto plano con los nombres de los activos a omitir</param>
+        /// <returns></returns>
+        public async Task Run(string ArchivoXLSX, string ArchivoOmisiones)
         {
             if (((IPikaSession)this.documentalAPI).APIConfig.Valid())
             {
@@ -67,7 +73,8 @@ namespace PIKA.NetCore.Importador
                             });
 
                             importadorPika.DateFormat = "dd/MM/yyyy";
-                            await importadorPika.Importar(@"C:\desa\importar-ca-test.xlsx", documentalAPI, metadatosAPI, contentAPI);
+                            // await importadorPika.Importar(@"C:\desa\importar-ca-test.xlsx", documentalAPI, metadatosAPI, contentAPI);
+                            await importadorPika.Importar(ArchivoXLSX, documentalAPI, metadatosAPI, contentAPI);
 
                         } else
                         {

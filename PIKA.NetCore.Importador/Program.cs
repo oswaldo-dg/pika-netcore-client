@@ -15,9 +15,15 @@ namespace PIKA.NetCore.Importador
     {
         static async Task Main(string[] args)
         {
+            if(args.Length == 0)
+            {
+                Console.WriteLine("Argumentos: [Archivo XSLX]");
+                return;
+            }
+
             var host = AppStartup();
             var service = ActivatorUtilities.CreateInstance<Importador>(host.Services);
-            service.Run().Wait();
+            service.Run(args[0]).Wait();
             Console.WriteLine("FIN ------------------");
         }
 

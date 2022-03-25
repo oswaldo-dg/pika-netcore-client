@@ -12,7 +12,8 @@ namespace PIKA.NetCore.Importador.Common
         Task Importar(string XlsxPath, 
             IDocumentalAPIClient DocumentalClient,
             IMetadatosAPIClient MetadatosClient,
-            IContentAPICLient ContentClient);
+            IContentAPICLient ContentClient,
+            string ArchivoOmisiones = null);
         string DateFormat { get; set; }
     }
 }

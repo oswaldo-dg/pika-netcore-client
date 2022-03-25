@@ -24,7 +24,7 @@ namespace PIKA.NetCore.Importador.XLSX
         private List<ValorListaOrdenada> CacheUnidadAdministrativaId = new List<ValorListaOrdenada>();
         private List<Plantilla> CachePlantillaId = new List<Plantilla>();
         private List<Carpeta> CacheCarpetas = new List<Carpeta>();
-
+        private List<string> Omisiones = new List<string>();
         public ImportadorXLSX()
         {
 
@@ -35,10 +35,27 @@ namespace PIKA.NetCore.Importador.XLSX
         public async Task Importar(string XlsxPath, 
             IDocumentalAPIClient DocumentalClient, 
             IMetadatosAPIClient MetadatosClient, 
-            IContentAPICLient ContentClient)
+            IContentAPICLient ContentClient, 
+            string ArchivoOmisiones = null)
         {
             try
             {
+                bool hayOmisiones;
+
+                if (ArchivoOmisiones != null)
+                {
+                    if (File.Exists(ArchivoOmisiones))
+                    {
+                        var  data = File.ReadAllText(ArchivoOmisiones).Split('\n');
+                        foreach(string s in data)
+                        {
+                            Omisiones.Add(s.Trim().ToLower());
+                        }
+
+                    }
+                }
+                hayOmisiones = Omisiones.Count > 0;
+
                 workbook = new XLWorkbook(XlsxPath);
                 ws = workbook.Worksheet(1);
 
@@ -69,6 +86,15 @@ namespace PIKA.NetCore.Importador.XLSX
                     ws.Row(i).Cell(Constants.COL_ESTADO_METADATOS).SetValue<string>("");
 
                     ActivoImportacion act = GetActivo(ws.Row(i), ws.Row(1));
+                    if (hayOmisiones)
+                    {
+                        if (Omisiones.IndexOf(act.Nombre.ToLower()) >= 0)
+                        {
+                            ws.Row(i).Cell(Constants.COL_ERROR).SetValue<string>("OMITED");
+                            continue;
+                        }
+                    }
+
                     var validacion = act.ErroresValidacion();
                     if (validacion.Count == 0)
                     {

@@ -167,7 +167,7 @@ namespace PIKA.NetCore.Client
                 var disco = await HttpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
                 {
                     Address = Config.URLIdentity,
-                    Policy = { RequireHttps = false, AllowHttpOnLoopback = true }
+                    Policy = { RequireHttps = false, AllowHttpOnLoopback = true,  ValidateIssuerName =false }
                 });
 
                 if (disco.IsError)

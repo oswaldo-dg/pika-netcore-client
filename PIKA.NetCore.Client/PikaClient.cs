@@ -174,7 +174,8 @@ namespace PIKA.NetCore.Client
                 {
                     result.ErrorCode = Constants.ERR_IDENTITY_DISCOVERY_FAIL;
                     result.Error = $"{disco.ErrorType} {disco.Error}\r\n{disco.Exception}";
-
+                    Console.WriteLine($"Discovery {result.Error }");
+                    Console.WriteLine($"{disco.HttpErrorReason} {(await disco.HttpResponse.Content.ReadAsStringAsync())}");
                 }
                 else
                 {
@@ -193,6 +194,7 @@ namespace PIKA.NetCore.Client
                     {
                         result.ErrorCode = Constants.ERR_IDENTITY_LOGIN_FAIL;
                         result.Error = $"{Token.ErrorType} {Token.ErrorDescription}\r\n{Token.Exception}";
+                        Console.WriteLine($"Token {result.Error }");
                     }
                     else
                     {
@@ -200,6 +202,7 @@ namespace PIKA.NetCore.Client
                         if (!string.IsNullOrEmpty(error))
                         {
                             result.ErrorCode = error;
+                            Console.WriteLine($"Decode {result.Error }");
                         }
                         else
                         {

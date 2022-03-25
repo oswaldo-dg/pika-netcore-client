@@ -17,13 +17,13 @@ namespace PIKA.NetCore.Importador
         {
             if(args.Length == 0)
             {
-                Console.WriteLine("Argumentos: [Archivo XSLX]");
+                Console.WriteLine("Argumentos: [Archivo XSLX] [Archivo Omisiones .TXT]");
                 return;
             }
 
             var host = AppStartup();
             var service = ActivatorUtilities.CreateInstance<Importador>(host.Services);
-            service.Run(args[0]).Wait();
+            service.Run(args[0], args[1]).Wait();
             Console.WriteLine("FIN ------------------");
         }
 

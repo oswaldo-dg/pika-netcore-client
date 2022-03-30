@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PIKA.NetCore.Importador.XLSX
+namespace PIKA.NetCore.Importador.JsonUnico
 {
     public class ActivoImportacion: Activo
     {

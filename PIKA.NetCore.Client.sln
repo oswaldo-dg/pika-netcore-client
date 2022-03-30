@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PIKA.NetCore.Client", "PIKA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PIKA.NetCore.Importador", "PIKA.NetCore.Importador\PIKA.NetCore.Importador.csproj", "{3BB52394-E0C6-4DCB-AB4D-0CB142935CE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PIKA.NetCore.Importador.XLSX", "PIKA.NetCore.Importador.XLSX\PIKA.NetCore.Importador.XLSX.csproj", "{BAD01E38-967B-42B7-AB44-B895A0048DCC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PIKA.NetCore.Importador.XLSX", "PIKA.NetCore.Importador.XLSX\PIKA.NetCore.Importador.XLSX.csproj", "{BAD01E38-967B-42B7-AB44-B895A0048DCC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PIKA.NetCore.Importador.Common", "PIKA.NetCore.Importador.Common\PIKA.NetCore.Importador.Common.csproj", "{64496B30-300F-49BE-AF41-7C8C40301232}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PIKA.NetCore.Importador.Common", "PIKA.NetCore.Importador.Common\PIKA.NetCore.Importador.Common.csproj", "{64496B30-300F-49BE-AF41-7C8C40301232}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PIKA.NetCore.Importador.JsonUnico", "PIKA.NetCore.Importador.JsonUnico\PIKA.NetCore.Importador.JsonUnico.csproj", "{B7727713-DB63-43B2-8CE6-2ED7EFE8662A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{64496B30-300F-49BE-AF41-7C8C40301232}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64496B30-300F-49BE-AF41-7C8C40301232}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64496B30-300F-49BE-AF41-7C8C40301232}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7727713-DB63-43B2-8CE6-2ED7EFE8662A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7727713-DB63-43B2-8CE6-2ED7EFE8662A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7727713-DB63-43B2-8CE6-2ED7EFE8662A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7727713-DB63-43B2-8CE6-2ED7EFE8662A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

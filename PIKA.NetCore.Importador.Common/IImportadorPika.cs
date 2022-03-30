@@ -9,7 +9,7 @@ namespace PIKA.NetCore.Importador.Common
 {
     public interface IImportadorPika
     {
-        Task Importar(string XlsxPath, 
+        Task Importar(string Archivo, 
             IDocumentalAPIClient DocumentalClient,
             IMetadatosAPIClient MetadatosClient,
             IContentAPICLient ContentClient,

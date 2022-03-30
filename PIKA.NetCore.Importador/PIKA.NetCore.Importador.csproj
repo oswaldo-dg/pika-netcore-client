@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -30,6 +30,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PIKA.NetCore.Client\PIKA.NetCore.Client.csproj" />
     <ProjectReference Include="..\PIKA.NetCore.Importador.Common\PIKA.NetCore.Importador.Common.csproj" />
+    <ProjectReference Include="..\PIKA.NetCore.Importador.JsonUnico\PIKA.NetCore.Importador.JsonUnico.csproj" />
     <ProjectReference Include="..\PIKA.NetCore.Importador.XLSX\PIKA.NetCore.Importador.XLSX.csproj" />
   </ItemGroup>
 

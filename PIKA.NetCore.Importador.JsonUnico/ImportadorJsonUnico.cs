@@ -226,21 +226,17 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                             await ContentClient.CompleteUploadContent(sesion);
                                         }
 
-                                        versionResult = await ContentClient.GetVersionById(ElementoActivo.Id);
-                                        if(versionResult.Success)
+                                        File.WriteAllText($"{Archivo}.result.json", JsonConvert.SerializeObject(versionResult.Payload, Formatting.Indented));
+                                        long t = 0;
+                                        foreach(var p in act.Archivos)
                                         {
-
-                                            File.WriteAllText($"{Archivo}.result.json", JsonConvert.SerializeObject(versionResult.Payload, Formatting.Indented));
-
-                                            resultado.Tamano = versionResult.Payload.Partes.Sum(x => x.LongitudBytes);
-                                            resultado.Paginas = versionResult.Payload.Partes.Count;
-
-                                        } else
-                                        {
-                                            LogData($"No version result {versionResult.Error} {versionResult.ErrorCode}");
-                                            throw new Exception("No version result");
+                                            FileInfo fi = new FileInfo(p);
+                                            t += fi.Length;
                                         }
-                                        
+
+                                        resultado.Tamano = t;
+                                        resultado.Paginas = VersionElemento.Partes.Count;
+
 
                                     } // Version obtenida OK
 

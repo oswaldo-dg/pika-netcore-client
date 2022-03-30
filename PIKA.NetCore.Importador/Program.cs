@@ -25,24 +25,32 @@ namespace PIKA.NetCore.Importador
                 return;
             }
 
-            if (Tipos.IndexOf(args[0].ToUpper()) >= 0)
+            string tipo = args[0].ToUpper();
+            string archivo = args[1].ToUpper();
+            string omisiones = null;
+            if(args.Length > 2)
             {
-                Console.WriteLine($"Procesando: {args[0]}, {args[1]} {args[2]}");
+                omisiones = args[2];
+            }
 
-                if(File.Exists(args[1]))
+            if (Tipos.IndexOf(tipo) >= 0)
+            {
+                Console.WriteLine($"Procesando: {tipo}, {archivo} {omisiones}");
+
+                if(File.Exists(archivo))
                 {
-                    var host = AppStartup(args[0].ToUpper());
+                    var host = AppStartup(tipo.ToUpper());
                     var service = ActivatorUtilities.CreateInstance<Importador>(host.Services);
-                    service.Run(args[1], args[2]).Wait();
+                    service.Run(archivo, omisiones).Wait();
 
                 } else
                 {
-                    Console.WriteLine($"Archivo no válido {args[1]}");
+                    Console.WriteLine($"Archivo no válido {archivo}");
                 }
 
             } else
             {
-                Console.WriteLine($"Tipo no válido de procesamiento {args[0]}");
+                Console.WriteLine($"Tipo no válido de procesamiento {tipo}");
             }
 
             

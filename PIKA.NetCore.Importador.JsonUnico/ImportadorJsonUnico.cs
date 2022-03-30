@@ -235,7 +235,7 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                         }
 
                                         resultado.Tamano = t;
-                                        resultado.Paginas = VersionElemento.Partes.Count;
+                                        resultado.Paginas = act.Archivos.Count;
 
 
                                     } // Version obtenida OK

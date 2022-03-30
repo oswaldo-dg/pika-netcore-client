@@ -226,7 +226,6 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                             await ContentClient.CompleteUploadContent(sesion);
                                         }
 
-                                        File.WriteAllText($"{Archivo}.result.json", JsonConvert.SerializeObject(versionResult.Payload, Formatting.Indented));
                                         long t = 0;
                                         foreach(var p in act.Archivos)
                                         {

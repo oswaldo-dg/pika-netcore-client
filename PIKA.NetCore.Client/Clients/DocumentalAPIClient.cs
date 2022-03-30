@@ -332,5 +332,48 @@ namespace PIKA.NetCore.Client
 
             return result;
         }
+
+        public async Task<PikaAPIResult<EntradaClasificacion>> GetEntradaClasificacion(string Id)
+        {
+            PikaAPIResult<EntradaClasificacion> result = new PikaAPIResult<EntradaClasificacion>
+            {
+                Payload = null
+            };
+            if (InSession)
+            {
+                VerificarHeaders();
+                try
+                {
+
+                    var response = await apiClient.ApiVGdEntradaClasificacionGetAsync(Id, Constants.APIVERSION);
+
+                    if (response != null)
+                    {
+                        result.Payload = response;
+                        result.Success = true;
+                    }
+                    else
+                    {
+                        result.Error = Constants.ERR_NOT_CREATED;
+                        result.ErrorCode = Constants.ERR_NOT_CREATED;
+                    }
+
+
+                }
+                catch (ApiException ex)
+                {
+                    result.ErrorCode = ex.StatusCode.ToString();
+                    result.Error = ex.Message;
+                }
+                catch (Exception ex)
+                {
+                    result.ErrorCode = Constants.ERR_UNKNOWN;
+                    result.Error = ex.Message;
+
+                }
+            }
+
+            return result;
+        }
     }
 }

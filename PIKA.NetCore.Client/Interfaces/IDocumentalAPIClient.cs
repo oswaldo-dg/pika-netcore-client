@@ -23,5 +23,6 @@ namespace PIKA.NetCore.Client
         Task<PikaAPIResult<Elemento>> LinkElementoActivo(string ActivoId, string ElementoId);
         Task<PikaAPIResult<Elemento>> GetElementoActivo(string ActivoId);
 
+        Task<PikaAPIResult<EntradaClasificacion>> GetEntradaClasificacion(string Id);
     }
 }

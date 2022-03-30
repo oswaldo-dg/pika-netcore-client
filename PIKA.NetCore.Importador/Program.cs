@@ -81,11 +81,11 @@ namespace PIKA.NetCore.Importador
                             switch(Tipo)
                             {
                                 case "XLSX":
-                                    services.AddTransient<IImportadorPika, ImportadorJsonUnico>();
+                                    services.AddTransient<IImportadorPika, ImportadorXLSX>();
                                     break;
 
                                 case "JSON":
-                                    services.AddTransient<IImportadorPika, ImportadorXLSX>();
+                                    services.AddTransient<IImportadorPika, ImportadorJsonUnico>();
                                     break;
                             }
                             

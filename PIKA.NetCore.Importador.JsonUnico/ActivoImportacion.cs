@@ -16,6 +16,8 @@ namespace PIKA.NetCore.Importador.JsonUnico
         }
         public List<string> Archivos { get; set; }
 
+        public string RutaRepositorio { get; set; }
+
         public string Ruta { get; set; }
         public bool EsFolder { get; set; }
         public string PlantillaId { get; set; }

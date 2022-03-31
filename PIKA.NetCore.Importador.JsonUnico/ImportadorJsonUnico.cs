@@ -15,6 +15,8 @@ namespace PIKA.NetCore.Importador.JsonUnico
     public class ImportadorJsonUnico : IImportadorPika
     {
 
+        private const string ENTRADACLASIFICACION_NOMBRE = "%ENTRADACLASIFICACION.NOMBRE%";
+
         private List<string> Omisiones = new List<string>();
         public ImportadorJsonUnico()
         {
@@ -98,7 +100,7 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                                                                 new CarpetaDeRuta()
                                                                                 {
                                                                                     PuntoMontajeId = elementoactivoResult.Payload.PuntoMontajeId,
-                                                                                    Ruta = $"/{resultEntrada.Payload.Nombre}",
+                                                                                    Ruta = $"/{act.RutaRepositorio.Replace(ENTRADACLASIFICACION_NOMBRE, resultEntrada.Payload.Nombre)}",
                                                                                     UsuarioId = ""
                                                                                 });
                                     if (rutaElemento.Success)

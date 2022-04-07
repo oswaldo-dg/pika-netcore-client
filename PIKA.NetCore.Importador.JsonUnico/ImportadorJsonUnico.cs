@@ -164,15 +164,13 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                 resultado.ElementoId = ElementoActivo.Id;
 
                                 Log.Information($"Activo creado {activo.Nombre} > Elemento {ElementoActivo.Id}");
-                                if (act.TieneContenido)
-                                {
-                                   
-                                } // Tiene contenido
 
 
                                 // Añade el conmtenido pendiente
                                 var versionResult = await ContentClient.GetVersionById(ElementoActivo.Id);
                                 bool modificado = false;
+
+                                Log.Information($" {versionResult.Success} ? {versionResult.Error} {versionResult.ErrorCode}");
 
                                 if (versionResult.Success)
                                 {
@@ -236,25 +234,29 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                 }
                                 else
                                 {
-                                    if (versionResult.ErrorCode == "ERR_NOT_FOUND")
-                                    {
-                                        Log.Information($"Creando version del elemento {activo.Nombre} > {ElementoActivo.Id}");
-                                        string sesion = Guid.NewGuid().ToString();
-                                        int indice = 0;
-                                        foreach (string archivo in act.Archivos)
-                                        {
-                                            await ContentClient.UploadContent(archivo, sesion, ElementoActivo.VolumenId, ElementoActivo.Id, ElementoActivo.PuntoMontajeId, ElementoActivo.Id, indice, null, null);
-                                            indice++;
-                                        }
-                                        await ContentClient.CompleteUploadContent(sesion);
-                                    } else
-                                    {
-                                        resultado.Error = $"Error al obtener la version {activo.Nombre} > {ElementoActivo.Id} : {versionResult.ErrorCode}{versionResult.Error}";
-                                        Log.Information(resultado.Error);
-                                    }
-                                } 
 
-                                    long t = 0;
+                                    Log.Information($"Creando version del elemento {activo.Nombre} > {ElementoActivo.Id}");
+                                    string sesion = Guid.NewGuid().ToString();
+                                    int indice = 0;
+                                    foreach (string archivo in act.Archivos)
+                                    {
+                                        await ContentClient.UploadContent(archivo, sesion, ElementoActivo.VolumenId, ElementoActivo.Id, ElementoActivo.PuntoMontajeId, ElementoActivo.Id, indice, null, null);
+                                        indice++;
+                                    }
+                                    await ContentClient.CompleteUploadContent(sesion);
+                                    //if (versionResult.ErrorCode == "ERR_NOT_FOUND")
+                                    //{
+                                      
+                                    //} else
+                                    //{
+                                    //    resultado.Error = $"Error al obtener la version {activo.Nombre} > {ElementoActivo.Id} : {versionResult.ErrorCode}{versionResult.Error}";
+                                    //    Log.Information(resultado.Error);
+                                    //}
+                                }
+
+                                Log.Information($"Actualizano conteo");
+
+                                long t = 0;
                                     foreach (var p in act.Archivos)
                                     {
                                         FileInfo fi = new FileInfo(p);

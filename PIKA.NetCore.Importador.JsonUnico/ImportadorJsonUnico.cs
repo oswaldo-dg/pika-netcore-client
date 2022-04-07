@@ -166,83 +166,86 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                 Log.Information($"Activo creado {activo.Nombre} > Elemento {ElementoActivo.Id}");
                                 if (act.TieneContenido)
                                 {
-                                    // Añade el conmtenido pendiente
-                                    var versionResult = await ContentClient.GetVersionById(ElementoActivo.Id);
-                                    bool modificado = false;
-                                    if (versionResult.Success)
-                                    {
-                                        VersionElemento = versionResult.Payload;
+                                   
+                                } // Tiene contenido
 
-                                        if (VersionElemento != null)
+
+                                // Añade el conmtenido pendiente
+                                var versionResult = await ContentClient.GetVersionById(ElementoActivo.Id);
+                                bool modificado = false;
+                                if (versionResult.Success)
+                                {
+                                    VersionElemento = versionResult.Payload;
+
+                                    if (VersionElemento != null)
+                                    {
+                                        if (VersionElemento.Partes != null && VersionElemento.Partes.ToList().Count > 0)
                                         {
-                                            if (VersionElemento.Partes != null && VersionElemento.Partes.ToList().Count > 0)
+                                            Log.Information($"Reordenando");
+                                            foreach (var p in VersionElemento.Partes.ToList())
                                             {
-                                                Log.Information($"Reordenando");
-                                                foreach (var p in VersionElemento.Partes.ToList())
+                                                string[] partes = (p.NombreOriginal ?? "").Split('.');
+                                                if (partes.Length == 2)
                                                 {
-                                                    string[] partes = (p.NombreOriginal ?? "").Split('.');
-                                                    if (partes.Length == 2)
+                                                    int index;
+                                                    if (int.TryParse(partes[0], out index))
                                                     {
-                                                        int index;
-                                                        if (int.TryParse(partes[0], out index))
-                                                        {
-                                                            p.Indice = index;
-                                                            modificado = true;
-                                                        }
+                                                        p.Indice = index;
+                                                        modificado = true;
                                                     }
                                                 }
                                             }
-
-                                            if (modificado)
-                                            {
-                                                await ContentClient.UpdateVersion(VersionElemento.Id, VersionElemento);
-                                            }
                                         }
 
-                                        if (VersionElemento.Partes == null) VersionElemento.Partes = new List<Parte>();
-                                        List<string> archivos = new List<string>();
-                                        List<string> archivosNuevos = new List<string>();
-
-                                        archivos = act.Archivos.OrderBy(f => f).ToList();
-
-                                        // Añade sólo los archivos inextsiontes como partes
-                                        archivos.ForEach(a =>
+                                        if (modificado)
                                         {
-                                            FileInfo fi = new FileInfo(a);
-                                            // Log.Error($"{fi.Name} {fi.Length}");
-                                            if (!VersionElemento.Partes.Any(x => x.NombreOriginal == fi.Name))
-                                            {
-                                                archivosNuevos.Add(a);
-                                            }
-                                        });
-
-                                        if (archivosNuevos.Count > 0)
-                                        {
-                                            string sesion = Guid.NewGuid().ToString();
-                                            int indice = 0;
-                                            foreach (string archivo in archivosNuevos)
-                                            {
-                                                await ContentClient.UploadContent(archivo, sesion, ElementoActivo.VolumenId, ElementoActivo.Id, ElementoActivo.PuntoMontajeId, ElementoActivo.Id, indice, null, null);
-                                                indice++;
-                                            }
-                                            await ContentClient.CompleteUploadContent(sesion);
+                                            await ContentClient.UpdateVersion(VersionElemento.Id, VersionElemento);
                                         }
+                                    }
 
-                                        long t = 0;
-                                        foreach(var p in act.Archivos)
+                                    if (VersionElemento.Partes == null) VersionElemento.Partes = new List<Parte>();
+                                    List<string> archivos = new List<string>();
+                                    List<string> archivosNuevos = new List<string>();
+
+                                    archivos = act.Archivos.OrderBy(f => f).ToList();
+
+                                    // Añade sólo los archivos inextsiontes como partes
+                                    archivos.ForEach(a =>
+                                    {
+                                        FileInfo fi = new FileInfo(a);
+                                        // Log.Error($"{fi.Name} {fi.Length}");
+                                        if (!VersionElemento.Partes.Any(x => x.NombreOriginal == fi.Name))
                                         {
-                                            FileInfo fi = new FileInfo(p);
-                                            t += fi.Length;
+                                            archivosNuevos.Add(a);
                                         }
+                                    });
 
-                                        resultado.Tamano = t;
-                                        resultado.Paginas = act.Archivos.Count;
+                                    if (archivosNuevos.Count > 0)
+                                    {
+                                        string sesion = Guid.NewGuid().ToString();
+                                        int indice = 0;
+                                        foreach (string archivo in archivosNuevos)
+                                        {
+                                            await ContentClient.UploadContent(archivo, sesion, ElementoActivo.VolumenId, ElementoActivo.Id, ElementoActivo.PuntoMontajeId, ElementoActivo.Id, indice, null, null);
+                                            indice++;
+                                        }
+                                        await ContentClient.CompleteUploadContent(sesion);
+                                    }
+
+                                    long t = 0;
+                                    foreach (var p in act.Archivos)
+                                    {
+                                        FileInfo fi = new FileInfo(p);
+                                        t += fi.Length;
+                                    }
+
+                                    resultado.Tamano = t;
+                                    resultado.Paginas = act.Archivos.Count;
 
 
-                                    } // Version obtenida OK
+                                } // Version obtenida OK
 
-                                    // ws.Row(i).Cell(Constants.COL_ESTADO_ELEMENTO).SetValue<string>("OK+CONTENT");
-                                } // Tiene contenido
+                                ////// ------------------------------------
 
                                 if (!string.IsNullOrEmpty(act.PlantillaId))
                                 {

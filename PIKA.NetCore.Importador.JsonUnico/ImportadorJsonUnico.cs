@@ -173,8 +173,10 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                 // Añade el conmtenido pendiente
                                 var versionResult = await ContentClient.GetVersionById(ElementoActivo.Id);
                                 bool modificado = false;
+
                                 if (versionResult.Success)
                                 {
+                                    Log.Information($"La version del elemento existe {activo.Nombre} > {ElementoActivo.Id}");
                                     VersionElemento = versionResult.Payload;
 
                                     if (VersionElemento != null)
@@ -231,6 +233,26 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                         }
                                         await ContentClient.CompleteUploadContent(sesion);
                                     }
+                                }
+                                else
+                                {
+                                    if (versionResult.ErrorCode == "ERR_NOT_FOUND")
+                                    {
+                                        Log.Information($"Creando version del elemento {activo.Nombre} > {ElementoActivo.Id}");
+                                        string sesion = Guid.NewGuid().ToString();
+                                        int indice = 0;
+                                        foreach (string archivo in act.Archivos)
+                                        {
+                                            await ContentClient.UploadContent(archivo, sesion, ElementoActivo.VolumenId, ElementoActivo.Id, ElementoActivo.PuntoMontajeId, ElementoActivo.Id, indice, null, null);
+                                            indice++;
+                                        }
+                                        await ContentClient.CompleteUploadContent(sesion);
+                                    } else
+                                    {
+                                        resultado.Error = $"Error al obtener la version {activo.Nombre} > {ElementoActivo.Id} : {versionResult.ErrorCode}{versionResult.Error}";
+                                        Log.Information(resultado.Error);
+                                    }
+                                } 
 
                                     long t = 0;
                                     foreach (var p in act.Archivos)
@@ -241,9 +263,6 @@ namespace PIKA.NetCore.Importador.JsonUnico
 
                                     resultado.Tamano = t;
                                     resultado.Paginas = act.Archivos.Count;
-
-
-                                } // Version obtenida OK
 
                                 ////// ------------------------------------
 

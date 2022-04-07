@@ -347,7 +347,12 @@ namespace PIKA.NetCore.Importador.XLSX
                     }
                     else
                     {
-                        ws.Row(i).Cell(Constants.COL_ERROR).SetValue<string>($"Datos no validos renglon {i}");
+                        string err = "";
+                        act.ErroresValidacion().ForEach(e => {
+                            err += $"{e}, ";
+                        });
+
+                        ws.Row(i).Cell(Constants.COL_ERROR).SetValue<string>($"Datos no validos renglon {i}: {err}");
                         Log.Warning($"Datos no validos renglon {i}");
                     }
 

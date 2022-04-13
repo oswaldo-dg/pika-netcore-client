@@ -164,6 +164,7 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                 resultado.ElementoId = ElementoActivo.Id;
 
                                 Log.Information($"Activo creado {activo.Nombre} > Elemento {ElementoActivo.Id}");
+                                LogData($"Activo creado {activo.Nombre} > Elemento {ElementoActivo.Id}");
 
 
                                 // Añade el conmtenido pendiente
@@ -171,10 +172,12 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                 bool modificado = false;
 
                                 Log.Information($" {versionResult.Success} ? {versionResult.Error} {versionResult.ErrorCode}");
+                                LogData($" {versionResult.Success} ? {versionResult.Error} {versionResult.ErrorCode}");
 
                                 if (versionResult.Success)
                                 {
                                     Log.Information($"La version del elemento existe {activo.Nombre} > {ElementoActivo.Id}");
+                                    LogData($"La version del elemento existe {activo.Nombre} > {ElementoActivo.Id}");
                                     VersionElemento = versionResult.Payload;
 
                                     //if (VersionElemento != null)
@@ -206,6 +209,7 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                     if (VersionElemento.Partes == null)
                                     {
                                         Log.Information($"Creando lista de partes");
+                                        LogData($"Creando lista de partes");
                                         VersionElemento.Partes = new List<Parte>();
                                     }
                                     
@@ -226,7 +230,7 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                     });
 
                                     Log.Information($"Archivos nuevos {archivosNuevos.Count}");
-
+                                    LogData($"Archivos nuevos {archivosNuevos.Count}");
                                     if (archivosNuevos.Count > 0)
                                     {
                                         string sesion = Guid.NewGuid().ToString();
@@ -234,6 +238,7 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                         foreach (string archivo in archivosNuevos)
                                         {
                                             Log.Information($">{archivo}");
+                                            LogData($">{archivo}");
                                             await ContentClient.UploadContent(archivo, sesion, ElementoActivo.VolumenId, ElementoActivo.Id, ElementoActivo.PuntoMontajeId, ElementoActivo.Id, indice, null, null);
                                             indice++;
                                         }
@@ -241,17 +246,20 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                     }
                                     else {
                                         Log.Information($"No Hay Archivos nuevos");
+                                        LogData($"No Hay Archivos nuevos");
                                     }
                                 }
                                 else
                                 {
 
                                     Log.Information($"Creando version del elemento {activo.Nombre} > {ElementoActivo.Id}");
+                                    LogData($"Creando version del elemento {activo.Nombre} > {ElementoActivo.Id}");
                                     string sesion = Guid.NewGuid().ToString();
                                     int indice = 0;
                                     foreach (string archivo in act.Archivos)
                                     {
                                         Log.Information($">{archivo}");
+                                        LogData($">{archivo}");
                                         await ContentClient.UploadContent(archivo, sesion, ElementoActivo.VolumenId, ElementoActivo.Id, ElementoActivo.PuntoMontajeId, ElementoActivo.Id, indice, null, null);
                                         indice++;
                                     }
@@ -266,7 +274,8 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                     //}
                                 }
 
-                                Log.Information($"Actualizano conteo");
+                                Log.Information($"Actualizando conteo");
+                                LogData($"Actualizando conteo");
 
                                 long t = 0;
                                     foreach (var p in act.Archivos)
@@ -304,8 +313,8 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                             var plantillaresult = await MetadatosClient.CreateMetadatosObject(act.PlantillaId, rqPlantilla);
                                             if (plantillaresult.Success)
                                             {
-                                                // ws.Row(i).Cell(Constants.COL_ESTADO_METADATOS).SetValue<string>("OK");
                                                 Log.Information("Plantilla añadida");
+                                                LogData("Plantilla añadida");
                                             }
                                         }
                                         else
@@ -316,6 +325,7 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                                 // ws.Row(i).Cell(Constants.COL_ESTADO_METADATOS).SetValue<string>("UPDATED");
                                                 var plantillaresult = await MetadatosClient.UpdateMetadatosObject(doc.DocumentoId, act.PlantillaId, rqPlantilla);
                                                 Log.Information("Plantilla Actualizada");
+                                                LogData("Plantilla Actualizada");
                                             }
                                         }
                                     }

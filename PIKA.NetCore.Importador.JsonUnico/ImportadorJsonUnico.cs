@@ -177,33 +177,38 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                     Log.Information($"La version del elemento existe {activo.Nombre} > {ElementoActivo.Id}");
                                     VersionElemento = versionResult.Payload;
 
-                                    if (VersionElemento != null)
+                                    //if (VersionElemento != null)
+                                    //{
+                                    //    if (VersionElemento.Partes != null && VersionElemento.Partes.ToList().Count > 0)
+                                    //    {
+                                    //        Log.Information($"Reordenando");
+                                    //        foreach (var p in VersionElemento.Partes.ToList())
+                                    //        {
+                                    //            string[] partes = (p.NombreOriginal ?? "").Split('.');
+                                    //            if (partes.Length == 2)
+                                    //            {
+                                    //                int index;
+                                    //                if (int.TryParse(partes[0], out index))
+                                    //                {
+                                    //                    p.Indice = index;
+                                    //                    modificado = true;
+                                    //                }
+                                    //            }
+                                    //        }
+                                    //    }
+
+                                    //    if (modificado)
+                                    //    {
+                                    //        await ContentClient.UpdateVersion(VersionElemento.Id, VersionElemento);
+                                    //    }
+                                    //}
+
+                                    if (VersionElemento.Partes == null)
                                     {
-                                        if (VersionElemento.Partes != null && VersionElemento.Partes.ToList().Count > 0)
-                                        {
-                                            Log.Information($"Reordenando");
-                                            foreach (var p in VersionElemento.Partes.ToList())
-                                            {
-                                                string[] partes = (p.NombreOriginal ?? "").Split('.');
-                                                if (partes.Length == 2)
-                                                {
-                                                    int index;
-                                                    if (int.TryParse(partes[0], out index))
-                                                    {
-                                                        p.Indice = index;
-                                                        modificado = true;
-                                                    }
-                                                }
-                                            }
-                                        }
-
-                                        if (modificado)
-                                        {
-                                            await ContentClient.UpdateVersion(VersionElemento.Id, VersionElemento);
-                                        }
+                                        Log.Information($"Creando lista de partes");
+                                        VersionElemento.Partes = new List<Parte>();
                                     }
-
-                                    if (VersionElemento.Partes == null) VersionElemento.Partes = new List<Parte>();
+                                    
                                     List<string> archivos = new List<string>();
                                     List<string> archivosNuevos = new List<string>();
 
@@ -220,16 +225,22 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                         }
                                     });
 
+                                    Log.Information($"Archivos nuevos {archivosNuevos.Count}");
+
                                     if (archivosNuevos.Count > 0)
                                     {
                                         string sesion = Guid.NewGuid().ToString();
                                         int indice = 0;
                                         foreach (string archivo in archivosNuevos)
                                         {
+                                            Log.Information($">{archivo}");
                                             await ContentClient.UploadContent(archivo, sesion, ElementoActivo.VolumenId, ElementoActivo.Id, ElementoActivo.PuntoMontajeId, ElementoActivo.Id, indice, null, null);
                                             indice++;
                                         }
                                         await ContentClient.CompleteUploadContent(sesion);
+                                    }
+                                    else {
+                                        Log.Information($"No Hay Archivos nuevos");
                                     }
                                 }
                                 else
@@ -240,6 +251,7 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                     int indice = 0;
                                     foreach (string archivo in act.Archivos)
                                     {
+                                        Log.Information($">{archivo}");
                                         await ContentClient.UploadContent(archivo, sesion, ElementoActivo.VolumenId, ElementoActivo.Id, ElementoActivo.PuntoMontajeId, ElementoActivo.Id, indice, null, null);
                                         indice++;
                                     }

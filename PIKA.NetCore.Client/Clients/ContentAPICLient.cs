@@ -47,6 +47,37 @@ namespace PIKA.NetCore.Client
             return result;
         }
 
+        public async Task<PikaAPIResult<Volumen>> GetVolumenById(string Id)
+        {
+            PikaAPIResult<Volumen> result = new PikaAPIResult<Volumen>();
+            result.Payload = null;
+            if (InSession)
+            {
+                VerificarHeaders();
+                try
+                {
+                    var response = await apiClient.ApiVContenidoVolumenGetAsync(Id, Constants.APIVERSION);
+
+                    if (response != null)
+                    {
+                        result.Payload = response;
+                        result.Success = true;
+                    }
+                    else
+                    {
+                        result.Error = Constants.ERR_NOT_FOUND;
+                        result.ErrorCode = Constants.ERR_NOT_FOUND;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result.ErrorCode = Constants.ERR_UNKNOWN;
+                    result.Error = ex.Message;
+                }
+            }
+
+            return result;
+        }
 
         public async Task<PikaAPIResult<Version>> GetVersionById(string Id)
         {

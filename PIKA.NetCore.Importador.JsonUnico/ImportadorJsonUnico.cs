@@ -68,9 +68,13 @@ namespace PIKA.NetCore.Importador.JsonUnico
             {
                 ActivoImportacion act = JsonConvert.DeserializeObject<ActivoImportacion>(File.ReadAllText(Archivo));
                 Activo activo = act.ToActivo();
+                
+                // Determina si exixte la clave de archivo
                 var resultEntrada = await DocumentalClient.GetEntradaClasificacion(act.EntradaClasificacionId);
-                if(resultEntrada != null)
+                var volumne = await ContentClient.GetVolumenById(act.VolumentId);
+                if(resultEntrada.Payload != null && volumne.Payload != null)
                 {
+                    // Busca el activo del archivo
                     var activoresult = await DocumentalClient.CreaActivo(activo);
                     if (activoresult.Success)
                     {
@@ -94,24 +98,17 @@ namespace PIKA.NetCore.Importador.JsonUnico
                             {
                                 LogData($"Creando elemento");
                                 LogData($"Verificación de Carpeta");
-                                if (resultEntrada.Payload != null)
+                                var rutaElemento = await ContentClient.CreateCarpetaRuta(
+                                                                            new CarpetaDeRuta()
+                                                                            {
+                                                                                PuntoMontajeId = elementoactivoResult.Payload.PuntoMontajeId,
+                                                                                Ruta = $"/{act.RutaRepositorio.Replace(ENTRADACLASIFICACION_NOMBRE, resultEntrada.Payload.Nombre)}",
+                                                                                UsuarioId = ""
+                                                                            });
+                                if (rutaElemento.Success)
                                 {
-                                    var rutaElemento = await ContentClient.CreateCarpetaRuta(
-                                                                                new CarpetaDeRuta()
-                                                                                {
-                                                                                    PuntoMontajeId = elementoactivoResult.Payload.PuntoMontajeId,
-                                                                                    Ruta = $"/{act.RutaRepositorio.Replace(ENTRADACLASIFICACION_NOMBRE, resultEntrada.Payload.Nombre)}",
-                                                                                    UsuarioId = ""
-                                                                                });
-                                    if (rutaElemento.Success)
-                                    {
-                                        LogData($"Carpeta creada");
-                                        carpetaElemento = rutaElemento.Payload;
-                                    }
-                                }
-                                else
-                                {
-                                    LogData($"No hay datos para crear la carpeta");
+                                    LogData($"Carpeta creada");
+                                    carpetaElemento = rutaElemento.Payload;
                                 }
 
 
@@ -136,7 +133,7 @@ namespace PIKA.NetCore.Importador.JsonUnico
                                         TipoOrigenId = "Activo",
                                         Versionado = true,
                                         VersionId = null,
-                                        VolumenId = elementoactivoResult.Payload.VolumenId
+                                        VolumenId = act.VolumentId
                                     };
                                     LogData($"Creando elemento");
                                     var elementoResult = await ContentClient.CreateElemento(elemento);
@@ -356,8 +353,8 @@ namespace PIKA.NetCore.Importador.JsonUnico
                     }
                 } else
                 {
-                    LogData($"Entrada clasifiación no valida {act.EntradaClasificacionId}");
-                    resultado.Error = $"Entrada clasifiación no valida {act.EntradaClasificacionId}";
+                    LogData($"Entrada clasifiación o volumen no valids {act.EntradaClasificacionId}/{act.VolumentId}");
+                    resultado.Error = $"Entrada clasifiación o volumen no valids {act.EntradaClasificacionId}/{act.VolumentId}";
                 }
 
                 

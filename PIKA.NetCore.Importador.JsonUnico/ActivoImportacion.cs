@@ -21,7 +21,7 @@ namespace PIKA.NetCore.Importador.JsonUnico
         public string Ruta { get; set; }
         public bool EsFolder { get; set; }
         public string PlantillaId { get; set; }
-
+        public string VolumentId { get; set; }
         public List<ValorPlantilla> ValoresPlantilla { get; set; }
     }
 

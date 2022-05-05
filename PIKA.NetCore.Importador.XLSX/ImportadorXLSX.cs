@@ -405,6 +405,11 @@ namespace PIKA.NetCore.Importador.XLSX
 
         private async Task<bool> VerificaIdPlantilla(ActivoImportacion act, IDocumentalAPIClient DocumentalClient)
         {
+            if (Guid.TryParse(act.PlantillaId, out Guid x))
+            {
+                return true;
+            }
+
             bool IdOK = false;
             var IdEntrada = CachePlantillaId.Where(x => x.Nombre == act.PlantillaId).FirstOrDefault();
             if (IdEntrada == null)
@@ -443,6 +448,11 @@ namespace PIKA.NetCore.Importador.XLSX
 
         private async Task<bool> VerificaIdUnidadAdministrativa(ActivoImportacion act, IDocumentalAPIClient DocumentalClient)
         {
+            if (Guid.TryParse(act.UnidadAdministrativaArchivoId, out Guid x))
+            {
+                return true;
+            }
+
             bool IdOK = false;
             var IdEntrada = CacheUnidadAdministrativaId.Where(x => x.Texto == act.UnidadAdministrativaArchivoId).FirstOrDefault();
             if (IdEntrada == null)
@@ -469,6 +479,11 @@ namespace PIKA.NetCore.Importador.XLSX
 
         private async Task<bool> VerificaIdArchivo(ActivoImportacion act, IDocumentalAPIClient DocumentalClient)
         {
+            if (Guid.TryParse(act.ArchivoOrigenId, out Guid x))
+            {
+                return true;
+            }
+
             bool IdOK = false;
             var IdEntrada = CacheArchivoId.Where(x => x.Texto == act.ArchivoOrigenId).FirstOrDefault();
             if (IdEntrada == null)
@@ -497,6 +512,11 @@ namespace PIKA.NetCore.Importador.XLSX
 
         private async Task<bool> VerificaIdEntrada(ActivoImportacion act, IDocumentalAPIClient DocumentalClient)
         {
+            if (Guid.TryParse(act.EntradaClasificacionId, out Guid x))
+            {
+                return true;
+            }
+
             bool IdEntradaOK = false;
             var IdEntrada = CacheEntradaClasificacionId.Where(x => x.Texto == act.EntradaClasificacionId).FirstOrDefault();
             if (IdEntrada == null)

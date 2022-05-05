@@ -23,7 +23,6 @@ namespace PIKA.NetCore.Client
                 VerificarHeaders();
                 try
                 {
-
                     var response = await apiClient.ApiVGdUnidadAdministrativaArchivoPageAsync("UnidadAdministrativa".ObtieneConsultaNombre(Nombre), Constants.APIVERSION);
 
                     if (response.Elementos != null && response.Elementos.Count == 1)

@@ -29,35 +29,20 @@ namespace PIKA.NetCore.Importador.XLSX
 
         public static DateTime? GetCellAsDate(this int i, IXLRow Row, string DateFormat)
         {
-            Console.WriteLine(i.GetCellAsText(Row));
             string Data = i.GetCellAsText(Row);
             if (string.IsNullOrEmpty(Data))
             {
-                Console.WriteLine("EMPTY");
                 return null;
             }
 
             var culture = CultureInfo.CreateSpecificCulture("es-MX");
             if (DateTime.TryParse(Data, culture, System.Globalization.DateTimeStyles.None, out DateTime dt))
             {
-                Console.WriteLine("OK");
                 return dt;
             }
 
-            Console.WriteLine("XXX");
+
             return null;
-
-            //DateTime? directdt = i.GetCellAsDate(Row, DateFormat);
-            //if(!directdt.HasValue)
-            //{
-                
-
-               
-            //} else 
-            //{
-            //    return directdt.Value;
-            //}
-
             
         }
 

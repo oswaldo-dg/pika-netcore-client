@@ -107,8 +107,38 @@ namespace PIKA.NetCore.Importador.XLSX
 
                         if(!verificaIdEntrada || !verificaIdArchivo || !verificaIdUnidadAdmin || !verificaIdPlantilla)
                         {
-                            ws.Row(i).Cell(Constants.COL_ERROR).SetValue<string>("INVALID_DATA");
-                            validacion.Add("INVALID_DATA");
+
+                            List<string> errores = new List<string>();
+                            if(!verificaIdEntrada)
+                            {
+                                errores.Add($"Id entrada {act.EntradaClasificacionId}");
+                            }
+
+                            if (!verificaIdArchivo)
+                            {
+                                errores.Add($"Id archivo {act.ArchivoOrigenId}");
+                            }
+
+                            if (!verificaIdUnidadAdmin)
+                            {
+                                errores.Add($"Id unidad adm {act.UnidadAdministrativaArchivoId}");
+                            }
+
+                            if (!verificaIdPlantilla)
+                            {
+                                errores.Add($"Id plantilla {act.PlantillaId}");
+                            }
+
+                            string err = "";
+
+                            foreach(string s in errores)
+                            {
+                                err+=$"{s}, ":
+                            }
+
+
+                            ws.Row(i).Cell(Constants.COL_ERROR).SetValue<string>($"INVALID_DATA: {err}");
+                            validacion.Add($"INVALID_DATA: {err}");
                             
                         } else
                         {
@@ -491,15 +521,18 @@ namespace PIKA.NetCore.Importador.XLSX
             return IdEntradaOK;
         }
 
+        private List<string> Errores = new List<string>();
 
         private ActivoImportacion GetActivo(IXLRow Row, IXLRow Header)
         {
+            Errores.Clear();
+
             ActivoImportacion a = new();
 
             a.Id = null;
             a.CuadroClasificacionId = null;
-            a.EntradaClasificacionId = Constants.COL_ENTRADACLASIFICACIONID.GetCellAsText(Row);
             a.Nombre = Constants.COL_NOMBRE.GetCellAsText(Row);
+            a.EntradaClasificacionId = Constants.COL_ENTRADACLASIFICACIONID.GetCellAsText(Row);
             a.IDunico = Constants.COL_IDUNICO.GetCellAsText(Row);
             a.FechaApertura = Constants.COL_FECHAAPERTURA.GetCellAsDate(Row, DateFormat) ?? DateTime.MinValue;
             a.FechaCierre = Constants.COL_FECHACIERRE.GetCellAsDate(Row, DateFormat);

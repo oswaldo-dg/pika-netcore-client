@@ -28,19 +28,29 @@ namespace PIKA.NetCore.Importador.XLSX
 
         public static DateTime? GetCellAsDate(this int i, IXLRow Row, string DateFormat)
         {
-            string Data = i.GetCellAsText(Row);
             
-            if (string.IsNullOrEmpty(Data))
+            DateTime? dt = i.GetCellAsDate(Row, DateFormat);
+            if(!dt.HasValue)
             {
+                string Data = i.GetCellAsText(Row);
+
+                if (string.IsNullOrEmpty(Data))
+                {
+                    return null;
+                }
+
+                if (DateTime.TryParse(Data, null, System.Globalization.DateTimeStyles.None, out DateTime dt))
+                {
+                    return dt;
+                }
+
                 return null;
-            }
-
-            if (DateTime.TryParse(Data, null, System.Globalization.DateTimeStyles.None, out DateTime dt))
+            } else 
             {
-                return dt;
+                return dt.Value;
             }
 
-            return null;
+            
         }
 
         public static List<string> ErroresValidacion(this ActivoImportacion a)

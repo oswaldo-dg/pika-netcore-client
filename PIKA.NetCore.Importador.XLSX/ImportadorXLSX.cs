@@ -133,7 +133,7 @@ namespace PIKA.NetCore.Importador.XLSX
 
                             foreach(string s in errores)
                             {
-                                err+=$"{s}, ":
+                                err += $"{s}, ";
                             }
 
 

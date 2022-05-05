@@ -29,8 +29,8 @@ namespace PIKA.NetCore.Importador.XLSX
         public static DateTime? GetCellAsDate(this int i, IXLRow Row, string DateFormat)
         {
             
-            DateTime? dt = i.GetCellAsDate(Row, DateFormat);
-            if(!dt.HasValue)
+            DateTime? directdt = i.GetCellAsDate(Row, DateFormat);
+            if(!directdt.HasValue)
             {
                 string Data = i.GetCellAsText(Row);
 
@@ -47,7 +47,7 @@ namespace PIKA.NetCore.Importador.XLSX
                 return null;
             } else 
             {
-                return dt.Value;
+                return directdt.Value;
             }
 
             

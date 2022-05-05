@@ -2,6 +2,7 @@
 using PIKA.NetCore.API;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -36,7 +37,8 @@ namespace PIKA.NetCore.Importador.XLSX
                 return null;
             }
 
-            if (DateTime.TryParse(Data, null, System.Globalization.DateTimeStyles.None, out DateTime dt))
+            var culture = CultureInfo.CreateSpecificCulture("es-MX");
+            if (DateTime.TryParse(Data, culture, System.Globalization.DateTimeStyles.None, out DateTime dt))
             {
                 Console.WriteLine("OK");
                 return dt;

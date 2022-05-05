@@ -23,7 +23,6 @@ namespace PIKA.NetCore.Client
                 VerificarHeaders();
                 try
                 {
-                    Console.WriteLine($"{System.Text.Json.JsonSerializer.Serialize("UnidadAdministrativa".ObtieneConsultaNombre(Nombre))}");
 
                     var response = await apiClient.ApiVGdUnidadAdministrativaArchivoPageAsync("UnidadAdministrativa".ObtieneConsultaNombre(Nombre), Constants.APIVERSION);
 

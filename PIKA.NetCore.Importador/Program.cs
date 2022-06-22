@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using PIKA.NetCore.Client;
 using PIKA.NetCore.Importador.Common;
 using PIKA.NetCore.Importador.JsonUnico;
+using PIKA.NetCore.Importador.LoteCaja;
 using PIKA.NetCore.Importador.XLSX;
 using Serilog;
 using System;
@@ -17,16 +18,25 @@ namespace PIKA.NetCore.Importador
     {
         static async Task Main(string[] args)
         {
-            List<string> Tipos = new List<string>() { "XLSX", "JSON" };
+            List<string> Tipos = new List<string>() { "XLSX", "JSON", "CAJA" };
 
-            if(args.Length <2 )
+            //if (args.Length < 2)
+            //{
+            //    Console.WriteLine("Argumentos: [XLSX|JSON|CAJA] [Archivo XSLX] [Archivo Omisiones .TXT]");
+            //    return;
+            //}
+
+            string tipo = "";
+            string archivo = "";
+            if (args.Length > 1)
             {
-                Console.WriteLine("Argumentos: [XSLS|JSON] [Archivo XSLX] [Archivo Omisiones .TXT]");
-                return;
+                tipo = args[0].ToUpper();
+                archivo = args[1].ToUpper();
+            } else
+            {
+                tipo = "CAJA";
             }
-
-            string tipo = args[0].ToUpper();
-            string archivo = args[1].ToUpper();
+            
             string omisiones = null;
             if(args.Length > 2)
             {
@@ -37,11 +47,30 @@ namespace PIKA.NetCore.Importador
             {
                 Console.WriteLine($"Procesando: {tipo}, {archivo} {omisiones}");
 
-                if(File.Exists(archivo))
+                if(File.Exists(archivo) || archivo =="")
                 {
                     var host = AppStartup(tipo.ToUpper());
                     var service = ActivatorUtilities.CreateInstance<Importador>(host.Services);
-                    service.Run(archivo, omisiones).Wait();
+                    
+
+                    switch (tipo)
+                    {
+                        case "XLSX":
+                            service.Run(archivo, omisiones).Wait();
+                            break;
+
+                        case "JSON":
+                            service.Run(archivo, omisiones).Wait();
+                            break;
+
+                        case "CAJA":
+                            service.RunSinconexion(archivo).Wait();
+                            break;
+
+                        default:
+                            
+                            break;
+                    }
 
                 } else
                 {
@@ -86,6 +115,13 @@ namespace PIKA.NetCore.Importador
 
                                 case "JSON":
                                     services.AddTransient<IImportadorPika, ImportadorJsonUnico>();
+                                    break;
+                                case "CAJA":
+                                    services.AddTransient<IImportadorPika, ImportadorLoteCaja>();
+                                    break;
+
+                                default:
+                                    services.AddTransient<IImportadorPika, ImportadorLoteCaja>();
                                     break;
                             }
                             

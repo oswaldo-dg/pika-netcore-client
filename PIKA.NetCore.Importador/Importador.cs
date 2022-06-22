@@ -95,5 +95,10 @@ namespace PIKA.NetCore.Importador
                 _log.LogError("INVALID_CONFIGURATION");
             }
         }
+
+        public async Task RunSinconexion(string ruta)
+        {
+            await importadorPika.Importar(ruta, documentalAPI, metadatosAPI, contentAPI);
+        }
     }
 }
